@@ -4,7 +4,7 @@ import math
 
 
 class handDetector():
-    def __init__(self, mode=False, maxHands=1, modelComplexity=1, detectionCon=0.5, trackCon=0.5):
+    def __init__(self, mode=False, maxHands=1, modelComplexity=1, detectionCon=0.8, trackCon=0.5):
         self.mode = mode
         self.maxHands = maxHands
         self.modelComplex = modelComplexity
@@ -58,13 +58,28 @@ class handDetector():
 
         return self.lmList, bbox
 
-    def fingersUp(self):
+    def whatHand(self):
+        hand = [0,0]
+        if len(self.lmList):
+            if self.lmList[4][1] > self.lmList[17][1]:
+                hand = [0, 1]
+            else:
+                hand = [1, 0]
+        return hand
+
+    def fingersUp(self, hand):
         fingers = []
         if len(self.lmList):
-            if self.lmList[self.tipIds[0]][1] > self.lmList[self.tipIds[0] - 1][1]:
-                fingers.append(1)
+            if hand == [1, 0]:
+                if self.lmList[self.tipIds[0]][1] < self.lmList[self.tipIds[0] - 1][1]:
+                    fingers.append(1)
+                else:
+                    fingers.append(0)
             else:
-                fingers.append(0)
+                if self.lmList[self.tipIds[0]][1] > self.lmList[self.tipIds[0] - 1][1]:
+                    fingers.append(1)
+                else:
+                    fingers.append(0)
 
             for id in range(1, 5):
                 if self.lmList[self.tipIds[id]][2] < self.lmList[self.tipIds[id] - 2][2]:
@@ -88,3 +103,4 @@ class handDetector():
         length = math.hypot(x2 - x1, y2 - y1)
 
         return length, img, [x1, y1, x2, y2, cx, cy]
+
