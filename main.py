@@ -30,7 +30,7 @@ def main():
 
     # Screen size ######
     wScr, hScr = pag.size()
-    # print(wScr, hScr) # screen size output
+    print(wScr, hScr) # screen size output
     frameR = 150  # reducing the input window
     ####################
 
@@ -64,8 +64,8 @@ def main():
         # Check whether the finger is raised
         finup = detector.fingersUp(whathnd)
 
-        # print(whathnd)
-        # print(finup)
+        print(whathnd)
+        print(finup)
 
         # frame restriction of hand movement
         cv2.rectangle(img, (frameR, frameR), (wCam - frameR, hCam - frameR), (255, 0, 255), 2)
@@ -96,9 +96,9 @@ def main():
         # Right mouse button
         if finup[0] == 0 and finup[1] == 1 and finup[2] == 0 and finup[3] == 0 and finup[4] == 1:
             length, img, _ = detector.findDistance(8, 20, img)
-            # print(length)
+            print(length)
             # Mouse click if the distance is less than 21
-            if length < 30:
+            if length < 50:
                 func.RCM(img, x1, y1, length)
 
         # Sound settings
