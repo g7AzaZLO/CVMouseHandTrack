@@ -1,4 +1,4 @@
-# VCMouseHandTrack
+# CVMouseHandTrack
 mouse control using hand gestures by Aza#ZLO
 
 1) To run the program, you need to install the libraries with the command:
