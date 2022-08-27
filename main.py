@@ -11,7 +11,6 @@ from ctypes import cast, POINTER
 from comtypes import CLSCTX_ALL
 
 
-# Start logic
 def main():
     # Camera ###########
     cam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
@@ -30,7 +29,7 @@ def main():
 
     # Screen size ######
     wScr, hScr = pag.size()
-    print(wScr, hScr) # screen size output
+    # print(wScr, hScr) # screen size output
     frameR = 150  # reducing the input window
     ####################
 
@@ -52,6 +51,7 @@ def main():
 
     while True:
         success, img = cam.read()
+        img = cv2.flip(img, 1)
         img = detector.findHands(img)
         lmList, bbox = detector.findPosition(img)
 
@@ -64,8 +64,8 @@ def main():
         # Check whether the finger is raised
         finup = detector.fingersUp(whathnd)
 
-        print(whathnd)
-        print(finup)
+        # print(whathnd)
+        # print(finup)
 
         # frame restriction of hand movement
         cv2.rectangle(img, (frameR, frameR), (wCam - frameR, hCam - frameR), (255, 0, 255), 2)
@@ -81,25 +81,33 @@ def main():
             clockY = clockY + (y3 - plocY) / smooth
 
             # Mouse movement
-            mouse.move(wScr - clockX, clockY)
+            mouse.move(clockX, clockY)
             cv2.circle(img, (x1, y1), 10, (0, 0, 255), cv2.FILLED)
             plocX, plocY = clockX, clockY
 
         # Left mouse button
         if finup[0] == 0 and finup[1] == 1 and finup[2] == 1 and finup[3] == 0 and finup[4] == 0:
             length, img, _ = detector.findDistance(8, 12, img)
-            print(length)
+            # print(length)
             # Mouse click if the distance is less than 25
-            if length < 25:
+            if length > 25:
+                flag = True
+            if length < 25 and flag == True:
                 func.LCM(img, x1, y1, length)
+                flag = False
+
+
 
         # Right mouse button
         if finup[0] == 0 and finup[1] == 1 and finup[2] == 0 and finup[3] == 0 and finup[4] == 1:
             length, img, _ = detector.findDistance(8, 20, img)
-            print(length)
-            # Mouse click if the distance is less than 21
+            # print(length)
+            # Mouse click if the distance is less than 50
+            if length > 25:
+                flag = True
             if length < 50:
                 func.RCM(img, x1, y1, length)
+                flag = False
 
         # Sound settings
         if finup[0] == 1 and finup[1] == 1 and finup[2] == 0 and finup[3] == 0 and finup[4] == 1:
