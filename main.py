@@ -1,3 +1,7 @@
+# Program by ZLO#DEV
+# Original link on project https://github.com/MaloyMeee/CVMouseHandTrack
+
+
 import cv2
 import mediapipe as mp
 import pyautogui as pag
@@ -49,13 +53,18 @@ def main():
     maxVol = volRange[1]
     ####################
 
+    # Flag ##############
+
+    flag = False
+    #####################
+
     while True:
         success, img = cam.read()
         img = cv2.flip(img, 1)
         img = detector.findHands(img)
         lmList, bbox = detector.findPosition(img)
 
-        # We track the position of the index and thumb
+        # We track the position of the index
         if len(lmList) != 0:
             x1, y1 = lmList[8][1:]
 
@@ -97,7 +106,6 @@ def main():
                 flag = False
 
 
-
         # Right mouse button
         if finup[0] == 0 and finup[1] == 1 and finup[2] == 0 and finup[3] == 0 and finup[4] == 1:
             length, img, _ = detector.findDistance(8, 20, img)
@@ -108,6 +116,18 @@ def main():
             if length < 50:
                 func.RCM(img, x1, y1, length)
                 flag = False
+
+
+        #Grub and drop NOT READY
+        if finup[0] == 1 and finup[1] == 1 and finup[2] == 1 and finup[3] == 0 and finup[4] == 0:
+            length, img, _ = detector.findDistance(8, 12, img)
+            #print(length)
+            if length < 25:
+                mouse.press(button="left")
+                mouse.move(clockX, clockY)
+
+
+
 
         # Sound settings
         if finup[0] == 1 and finup[1] == 1 and finup[2] == 0 and finup[3] == 0 and finup[4] == 1:
