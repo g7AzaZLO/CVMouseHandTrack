@@ -1,3 +1,6 @@
+# Program by ZLO#DEV
+# Original link on project https://github.com/MaloyMeee/CVMouseHandTrack
+
 import cv2
 import mediapipe as mp
 import math
@@ -103,4 +106,8 @@ class handDetector():
         length = math.hypot(x2 - x1, y2 - y1)
 
         return length, img, [x1, y1, x2, y2, cx, cy]
+
+
+
+
 

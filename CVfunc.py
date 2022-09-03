@@ -1,3 +1,6 @@
+# Program by ZLO#DEV
+# Original link on project https://github.com/MaloyMeee/CVMouseHandTrack
+
 import cv2
 import mouse
 import numpy as np
@@ -15,6 +18,8 @@ def RCM(img, x1, y1, length):
     mouse.click(button='right')
 
 
-def chngVol(length, minVol, maxVol, volume):
+def chngVol(length, minVol, maxVol, volume , distanse170cm):
     vol = np.interp(length, [-100, 180], [minVol, maxVol])
     volume.SetMasterVolumeLevel(vol, None)
+
+

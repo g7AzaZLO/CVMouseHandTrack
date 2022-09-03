@@ -53,11 +53,16 @@ def main():
     maxVol = volRange[1]
     ####################
 
+    # experemental distance
+    #x = [270, 220, 184, 159, 137, 121, 111, 98, 91, 82, 78, 71, 70, 44, 61, 57, 54, 52, 50]
+    #y = [20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110]
+    #####################
+
+
     # Flag ##############
 
     flag = False
     #####################
-
     while True:
         success, img = cam.read()
         img = cv2.flip(img, 1)
@@ -110,15 +115,16 @@ def main():
         if finup[0] == 0 and finup[1] == 1 and finup[2] == 0 and finup[3] == 0 and finup[4] == 1:
             length, img, _ = detector.findDistance(8, 20, img)
             # print(length)
+
             # Mouse click if the distance is less than 50
-            if length > 25:
+            if length > 30:
                 flag = True
             if length < 50:
                 func.RCM(img, x1, y1, length)
                 flag = False
 
 
-        #Grub and drop NOT READY
+        #Grub and drop
         if finup[0] == 1 and finup[1] == 1 and finup[2] == 1 and finup[3] == 0 and finup[4] == 0:
             length, img, _ = detector.findDistance(8, 12, img)
             #print(length)
@@ -126,13 +132,31 @@ def main():
                 mouse.press(button="left")
                 mouse.move(clockX, clockY)
 
+        #scroll
+        if finup[0] == 1 and finup[1] == 0 and finup[2] == 0 and finup[3] == 0 and finup[4] == 0:
+            if len(lmList) != 0:
+                x1, y1 = lmList[4][1:]
+                x2, y2 = lmList[5][1:]
+                if y1>y2:
+                    mouse.wheel(delta=-0.5)
+                elif y1<y2:
+                    mouse.wheel(delta=0.5)
+
+        #Distance
+        if len(lmList) != 0:
+            coord17x, coord17y = lmList[17][1:]
+            coord0x, coord0y = lmList[0][1:]
+            distanse170 = int(np.sqrt((coord0y-coord17y)**2+(coord0x-coord17x)**2))
+            distanse170cm = 5503.9283512*distanse170**(-1.0016171)
+            print(distanse170,distanse170cm)
+            cv2.putText(img, f'{str(int(distanse170cm))}cm', (20, 90), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
 
 
 
         # Sound settings
         if finup[0] == 1 and finup[1] == 1 and finup[2] == 0 and finup[3] == 0 and finup[4] == 1:
             length, img, _ = detector.findDistance(4, 8, img)
-            func.chngVol(length, minVol, maxVol, volume)
+            func.chngVol(length, minVol, maxVol, volume, distanse170cm)
 
         # FPS
         cTime = time.time()
