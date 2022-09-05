@@ -12,14 +12,16 @@ def LCM(img, x1, y1, length):
     mouse.click('left')
 
 
-
 def RCM(img, x1, y1, length):
     cv2.circle(img, (x1, y1), 10, (0, 255, 255), cv2.FILLED)
     mouse.click(button='right')
 
 
-def chngVol(length, minVol, maxVol, volume , distanse170cm):
-    vol = np.interp(length, [-100, 180], [minVol, maxVol])
+def chngVol(length, minVol, maxVol, volume, distanse170cm):
+    coff = distanse170cm / 100
+    length = length * coff
+    vol = np.interp(length, [10, 90], [-82, 0])
+    # vol = np.interp(length, [10, 90], [minVol, maxVol])
+    print(length, vol)
     volume.SetMasterVolumeLevel(vol, None)
-
 
