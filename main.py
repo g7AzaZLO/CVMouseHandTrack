@@ -3,13 +3,11 @@
 
 
 import cv2
-import mediapipe as mp
 import pyautogui as pag
 import mouse
 import numpy as np
 import time
-import HandTrackingModule as htm
-import CVfunc as func
+from HandTrack import CVfunc as func, HandTrackingModule as htm
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 from ctypes import cast, POINTER
 from comtypes import CLSCTX_ALL
@@ -17,7 +15,7 @@ from comtypes import CLSCTX_ALL
 
 def main():
     # Camera ###########
-    cam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    cam = cv2.VideoCapture(1, cv2.CAP_DSHOW)
     wCam, hCam = 640, 480
     cam.set(3, wCam)
     cam.set(4, hCam)
@@ -38,7 +36,7 @@ def main():
     ####################
 
     # Smoothing the mouse
-    smooth = 3
+    smooth = 3.5
     plocX, plocY = 0, 0
     clockX, clockY = 0, 0
     ####################
@@ -68,6 +66,37 @@ def main():
         img = cv2.flip(img, 1)
         img = detector.findHands(img)
         lmList, bbox = detector.findPosition(img)
+
+
+        # angle of inclination + distance
+        if len(lmList)!=0:
+            coord17x, coord17y = lmList[17][1:]
+            coord0x, coord0y = lmList[0][1:]
+            coord5x, coord5y = lmList[5][1:]
+            coord517x, coord517y = (coord17x + coord5x)/2, (coord17y + coord5y)/2
+            shx17 = coord17x - coord0x
+            shy17 = coord17y - coord0y
+            shx517 = coord517x - coord0x
+            shy517 = coord517y - coord0y
+            ratioalpha = np.arctan(0)
+            try:
+                alphaplusbeta = np.arctan(shx517 / shy517)
+            except ZeroDivisionError:
+                alphaplusbeta=np.arctan(shx517/(shy517+0.1))
+                #alphaplusbeta = 1.57
+            ratiobeta = -(alphaplusbeta - ratioalpha*0)
+            shxnew = (shx17 * np.cos(ratiobeta)) + (shy17 * np.sin(ratiobeta))
+            shynew = (-shx17 * np.sin(ratiobeta)) + (shy17 * np.cos(ratiobeta))
+            ratioXY = abs(shxnew / shynew)
+            constratioXY = abs(-0.4)
+
+            if ratioXY >= constratioXY:
+                l = np.abs(shxnew*np.sqrt(1+(1/constratioXY)**2))
+                distanse170cm = 5503.9283512 * l ** (-1.0016171)
+            else:
+                l = np.abs(shynew*np.sqrt(1+constratioXY**2))
+                distanse170cm = 5503.9283512 * l ** (-1.0016171)
+            cv2.putText(img, f'{str(int(distanse170cm))}cm', (20, 90), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
 
         # We track the position of the index
         if len(lmList) != 0:
@@ -102,14 +131,14 @@ def main():
         # Left mouse button
         if finup[0] == 0 and finup[1] == 1 and finup[2] == 1 and finup[3] == 0 and finup[4] == 0:
             length, img, _ = detector.findDistance(8, 12, img)
-            # print(length)
+            print(length)
             # Mouse click if the distance is less than 25
-            if length > 25:
+            if length > (55):
                 flag = True
-            if length < 25 and flag == True:
+            if length < (35) and flag == True:
                 func.LCM(img, x1, y1, length)
                 flag = False
-
+#50см сжатие - 35  , разжатие 55    100см сжатие 15 разжатие 35
         # Right mouse button
         if finup[0] == 0 and finup[1] == 1 and finup[2] == 0 and finup[3] == 0 and finup[4] == 1:
             length, img, _ = detector.findDistance(8, 20, img)
@@ -125,7 +154,7 @@ def main():
         # Grub and drop
         if finup[0] == 1 and finup[1] == 1 and finup[2] == 1 and finup[3] == 0 and finup[4] == 0:
             length, img, _ = detector.findDistance(8, 12, img)
-            # print(length)
+            print(length)
             if length < 25:
                 mouse.press(button="left")
                 mouse.move(clockX, clockY)
@@ -140,57 +169,12 @@ def main():
                 elif y1 < y2:
                     mouse.wheel(delta=0.5)
 
-        # Distance
-        #if len(lmList) != 0:
-            #coord17x, coord17y = lmList[17][1:]
-            #coord0x, coord0y = lmList[0][1:]
-            #distanse170 = int(np.sqrt((coord0y - coord17y) ** 2 + (coord0x - coord17x) ** 2))
-            #distanse170cm = 5503.9283512 * distanse170 ** (-1.0016171)
-            #print(distanse170,distanse170cm)
-            #cv2.putText(img, f'{str(int(distanse170cm))}cm', (20, 90), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
-
-        # angle of inclination + distance
-        if len(lmList)!=0:
-            coord17x, coord17y = lmList[17][1:]
-            coord0x, coord0y = lmList[0][1:]
-            coord5x, coord5y = lmList[5][1:]
-            distanse170 = int(np.sqrt((coord0y - coord17y) ** 2 + (coord0x - coord17x) ** 2))
-            distanse50 = int(np.sqrt((coord0y - coord5y) ** 2 + (coord0x - coord5x) ** 2))
-            ratio = distanse50/distanse170
-            shx = coord17x-coord0x
-            shy = coord17y-coord0y
-            ratioalpha= np.arctan(-0.4)
-            alphaplusbeta = np.arctan(shx/shy)
-            ratiobeta = alphaplusbeta-ratioalpha
-            shxnew = (shx*np.cos(ratiobeta)) + (shy*np.sin(ratiobeta))
-            shynew = (-shx*np.sin(ratiobeta))+(shy*np.cos(ratiobeta))
-            ratioXY = abs(shxnew/shynew)
-            constratioXY = abs(-0.4)
-
-            #new distance
-            if ratioXY >= constratioXY:
-                l = shxnew*np.sqrt(1+(1/constratioXY)**2)
-                distanse170cm = 5503.9283512 * l ** (-1.0016171)
-            else:
-                l = shynew*np.sqrt(1+constratioXY**2)
-                distanse170cm = 5503.9283512 * l ** (-1.0016171)
-
-            difference = 1.1-ratio
-
-            #old distance
-            if abs(difference)<1:
-                distanse170cmold = 5503.9283512 * distanse170 ** (-1.0016171)
-                print(distanse170cm, distanse170cmold, shx,shy,shxnew,shynew, ratiobeta, l)
-                cv2.putText(img, f'{str(int(distanse170cmold))}cm', (20, 90), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
-
-
-
 
 
 
         # Sound settings
-        if finup[0] == 1 and finup[1] == 1 and finup[2] == 0 and finup[3] == 0 and finup[4] == 1:
-            length, img, _ = detector.findDistance(4, 8, img)
+        #if finup[0] == 1 and finup[1] == 1 and finup[2] == 0 and finup[3] == 0 and finup[4] == 1:
+            #length, img, _ = detector.findDistance(4, 8, img)
             #func.chngVol(length, minVol, maxVol, volume, distanse170cm)
 
         # FPS
