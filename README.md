@@ -29,6 +29,7 @@ To scroll, just lower and raise your thumb
 
 ![scroll](https://user-images.githubusercontent.com/59707245/218580477-4d6b03ea-4dbf-4162-8a35-b6a4a21d3386.gif)
 
+To capture an object, you need to raise your thumb, index and middle finger, then make a left mouse click, after that we move the object with our index finger. Next, to leave the object in a new place, you need to make a left mouse click
 
-
+![drugndrop](https://user-images.githubusercontent.com/59707245/218583325-7c396ca8-5246-47e0-8290-10b7bdb6fe37.gif)
 
