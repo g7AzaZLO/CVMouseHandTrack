@@ -25,7 +25,9 @@ To right-click, use this gesture. The distance between the fingers will appear i
 
 ![rcm](https://user-images.githubusercontent.com/59707245/186393664-483a99bb-b124-4926-a413-8ef0aedfe54f.gif)
 
+To scroll, just lower and raise your thumb
 
+![scroll](https://user-images.githubusercontent.com/59707245/218580477-4d6b03ea-4dbf-4162-8a35-b6a4a21d3386.gif)
 
 
 
