@@ -25,11 +25,7 @@ To right-click, use this gesture. The distance between the fingers will appear i
 
 ![rcm](https://user-images.githubusercontent.com/59707245/186393664-483a99bb-b124-4926-a413-8ef0aedfe54f.gif)
 
-To change the volume of the mixer there are 2 movements based on the same principle. The first is to zoom in and out of the hand with a gesture from the camera, the second is the use of fingers.To confirm the volume change, it is enough to lower the little finger
 
-![volume1](https://user-images.githubusercontent.com/59707245/186395789-eb031fe1-1ebe-4cc7-a2fd-32d1eaf53f1e.gif)
-
-![volume2](https://user-images.githubusercontent.com/59707245/186395799-ec7bf897-2ed7-43fc-9676-77bfc0c3b85c.gif)
 
 
 
