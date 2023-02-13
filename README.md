@@ -33,3 +33,4 @@ To capture an object, you need to raise your thumb, index and middle finger, the
 
 ![drugndrop](https://user-images.githubusercontent.com/59707245/218583325-7c396ca8-5246-47e0-8290-10b7bdb6fe37.gif)
 
+#The new functionality will be released in another repository with support for tracking two hands at the same time
