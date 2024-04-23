@@ -35,3 +35,4 @@ To capture an object, you need to raise your thumb, index and middle finger, the
 
 # The new functionality will be released in another repository with support for tracking two hands at the same time
 ## https://github.com/MaloyMeee/CVMouse2HandTrack
+
