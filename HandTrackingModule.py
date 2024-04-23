@@ -1,5 +1,5 @@
 # Program by ZLO#DEV
-# Original link on project https://github.com/MaloyMeee/CVMouseHandTrack
+# Original link on project https://github.com/g7AzaZLO/CVMouseHandTrack
 
 import cv2
 import mediapipe as mp

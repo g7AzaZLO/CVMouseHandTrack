@@ -24,4 +24,3 @@ def chngVol(length, minVol, maxVol, volume, distanse170cm):
     # vol = np.interp(length, [10, 90], [minVol, maxVol])
     print(length, vol)
     volume.SetMasterVolumeLevel(vol, None)
-
